@@ -1,0 +1,8 @@
+.narrow-card {
+    max-width: 500px;
+}
+.scroll{
+    max-height: 100px;
+    /*max-width: 500px;*/
+    overflow-y: auto;
+}
