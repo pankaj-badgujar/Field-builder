@@ -20,7 +20,7 @@ export default class ChoiceList extends React.Component {
 
     componentDidMount() {
         this.setState({
-            nextId : this.state.choices.length + 1
+            nextId: this.state.choices.length + 1
         })
     }
 
@@ -30,13 +30,36 @@ export default class ChoiceList extends React.Component {
         });
     }
 
-    addToChoices() {
-        console.log(this.state.newChoice);
+    validateNewChoice() {
+        return !this.isChoiceBlank() && !this.isChoiceDuplicate();
+    }
 
-        this.setState({
-            choices: [this.state.newChoice, ...this.state.choices],
-            nextId: this.state.nextId  + 1
-        });
+    isChoiceDuplicate() {
+        if (this.state.choices.find(
+            choice => choice.title.toLowerCase() ===
+                this.state.newChoice.title.toLowerCase()) !== undefined) {
+            alert("Choice already present in the choice list");
+            return true;
+        }
+        return false;
+    }
+
+    isChoiceBlank() {
+        if (this.state.newChoice === undefined ||
+            this.state.newChoice.title.trim().length < 1) {
+            alert("Choice cannot be blank");
+            return true;
+        }
+        return false;
+    }
+
+    addToChoices() {
+        if (this.validateNewChoice()) {
+            this.setState({
+                choices: [this.state.newChoice, ...this.state.choices],
+                nextId: this.state.nextId + 1
+            });
+        }
     }
 
     deleteFromChoices = (id) =>
@@ -60,6 +83,7 @@ export default class ChoiceList extends React.Component {
                         addChoice={this.addToChoices}/>
                 </div>
                 <div className="card-body scroll">
+                    <p> Number of choices: {this.state.choices.length}</p>
                     <ul className="list-group">
                         <p className="card-text">{this.renderListOfChoices()}</p>
                     </ul>
