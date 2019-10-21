@@ -1,16 +1,18 @@
 import React from "react";
+import "../containers/FieldBuilder.css";
 import RegionChoiceItem from "./RegionChoiceItem";
 import AddChoiceForm from "./AddChoiceForm";
+import {dummyData50Choices} from "../data/dummyData50Choices";
+import {dummyData} from "../data/dummData";
 
 export default class ChoiceList extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
-            choices: [
-                {title: 'Africa', id: 1},
-                {title: 'South east asia', id: 2},
-            ],
+            choices: dummyData
+            // choices: dummyData50Choices
         };
         this.deleteFromChoices = this.deleteFromChoices.bind(this);
         this.addToChoices = this.addToChoices.bind(this);
@@ -31,7 +33,16 @@ export default class ChoiceList extends React.Component {
     }
 
     validateNewChoice() {
-        return !this.isChoiceBlank() && !this.isChoiceDuplicate();
+        return !this.isChoiceBlank() && !this.isChoiceDuplicate()
+            && this.areChoicesLessThanFifty();
+    }
+
+    areChoicesLessThanFifty(){
+        if(this.state.choices.length >= 50){
+            alert("Cannot add more than 50 choices");
+            return false;
+        }
+        return true;
     }
 
     isChoiceDuplicate() {

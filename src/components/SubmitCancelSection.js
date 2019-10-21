@@ -1,4 +1,5 @@
 import React from "react"
+import "./SubmitCancelSection";
 
 const SubmitCancelSection = () =>
     <div className="row form-group">
@@ -8,9 +9,18 @@ const SubmitCancelSection = () =>
                 className="btn btn-success mr-md-3 mr-1">
                 Save changes
             </button>
-             or
             <button
-                className="text-danger ml-md-3 ml-1">Cancel</button>
+                className="btn btn-danger mx-md-3 ml-1">Cancel
+            </button>
+            <button
+                className="btn btn-warning ml-md-3 mt-1 d-none d-sm-inline">
+                Clear Form
+            </button>
+            <button
+                className="btn btn-warning ml-md-3 mt-1 btn-block d-block d-sm-none">
+                Clear Form
+            </button>
+
         </div>
     </div>;
 
