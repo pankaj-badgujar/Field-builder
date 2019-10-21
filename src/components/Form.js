@@ -11,14 +11,14 @@ export default class Form extends React.Component {
     render() {
         return (
             <div>
-                <form>
+
                     <LabelField/>
                     <TypeField/>
                     <DefaultValueField/>
                     <RegionChoicesField/>
                     <ChoiceOrderingField/>
                     <SubmitCancelSection/>
-                </form>
+
             </div>
         );
     }
