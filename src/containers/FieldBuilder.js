@@ -1,3 +1,4 @@
+import './FieldBuilder.css';
 import React from "react";
 import LabelField from "../components/LabelField";
 import TypeField from "../components/TypeField";
@@ -5,9 +6,87 @@ import DefaultValueField from "../components/DefaultValueField";
 import RegionChoicesField from "../components/RegionChoicesField";
 import ChoiceOrderingField from "../components/ChoiceOrderingField";
 import SubmitCancelSection from "../components/SubmitCancelSection";
+import {dummyData} from "../data/dummyData";
 
 
-class FieldBuilder extends React.Component{
+class FieldBuilder extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            choices: dummyData,
+            // choices: dummyData50Choices,
+            labelValue: 'first'
+        };
+        this.clearFields = this.clearFields.bind(this);
+        this.deleteFromChoices = this.deleteFromChoices.bind(this);
+        this.addToChoices = this.addToChoices.bind(this);
+        this.titleChanged = this.titleChanged.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({
+            nextId: this.state.choices.length + 1
+        })
+    }
+
+    clearFields() {
+        this.setState({
+            labelValue: ''
+        })
+    }
+
+    titleChanged(event) {
+        this.setState({
+            newChoice: {title: event.target.value, id: this.state.nextId}
+        });
+    }
+
+    validateNewChoice() {
+        return !this.isChoiceBlank() && !this.isChoiceDuplicate()
+            && this.areChoicesLessThanFifty();
+    }
+
+    areChoicesLessThanFifty() {
+        if (this.state.choices.length >= 50) {
+            alert("Cannot add more than 50 choices");
+            return false;
+        }
+        return true;
+    }
+
+    isChoiceDuplicate() {
+        if (this.state.choices.find(
+            choice => choice.title.toLowerCase() ===
+                this.state.newChoice.title.toLowerCase()) !== undefined) {
+            alert("Choice already present in the choice list");
+            return true;
+        }
+        return false;
+    }
+
+    isChoiceBlank() {
+        if (this.state.newChoice === undefined ||
+            this.state.newChoice.title.trim().length < 1) {
+            alert("Choice cannot be blank");
+            return true;
+        }
+        return false;
+    }
+
+    addToChoices() {
+        if (this.validateNewChoice()) {
+            this.setState({
+                choices: [this.state.newChoice, ...this.state.choices],
+                nextId: this.state.nextId + 1
+            });
+        }
+    }
+
+    deleteFromChoices = (id) =>
+        this.setState({
+            choices: this.state.choices.filter(choice => choice.id !== id)
+        });
 
     render() {
         return (
@@ -15,12 +94,19 @@ class FieldBuilder extends React.Component{
                 <div className="card">
                     <h5 className="card-header bg-info text-white">Field Builder</h5>
                     <div className="card-body">
-                        <LabelField/>
+                        <LabelField
+                            labelValue={this.state.labelValue}/>
                         <TypeField/>
                         <DefaultValueField/>
-                        <RegionChoicesField/>
+                        <RegionChoicesField
+                            titleChanged={this.titleChanged}
+                            addToChoices={this.addToChoices}
+                            choices={this.state.choices}
+                            deleteFromChoices={this.deleteFromChoices}
+                        />
                         <ChoiceOrderingField/>
-                        <SubmitCancelSection/>
+                        <SubmitCancelSection
+                            clearFields={this.clearFields}/>
                     </div>
                 </div>
                 <br/><br/>

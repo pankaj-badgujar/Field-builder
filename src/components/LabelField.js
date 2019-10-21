@@ -1,6 +1,6 @@
 import React from "react"
 
-const LabelField = () =>
+const LabelField = ({labelValue}) =>
     <div className="row form-group py-2">
         <div className="col-3">
             <label
@@ -11,6 +11,7 @@ const LabelField = () =>
         </div>
         <div className="col-9">
             <input
+                defaultValue={labelValue}
                 className="form-control"
                 placeholder="For eg. sales region"
                 id="salesRegionInput"/>
