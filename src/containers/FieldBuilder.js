@@ -11,17 +11,20 @@ import {dummyData} from "../data/dummyData";
 
 class FieldBuilder extends React.Component {
 
+
     constructor(props) {
         super(props);
         this.state = {
             choices: dummyData,
             // choices: dummyData50Choices,
-            labelValue: 'first'
         };
         this.clearFields = this.clearFields.bind(this);
         this.deleteFromChoices = this.deleteFromChoices.bind(this);
         this.addToChoices = this.addToChoices.bind(this);
         this.titleChanged = this.titleChanged.bind(this);
+
+        this.setRefForDefaultValue = this.setRefForDefaultValue.bind(this);
+        this.setRefForLabelInput = this.setRefForLabelInput.bind(this);
     }
 
     componentDidMount() {
@@ -31,10 +34,20 @@ class FieldBuilder extends React.Component {
     }
 
     clearFields() {
-        this.setState({
-            labelValue: ''
-        })
+        this.labelInputRef.value = "";
+        this.defaultValueInputRef.value = "";
+        this.requiredCheckboxRef.checked = false;
     }
+
+    setRefForLabelInput = (ref) =>
+        this.labelInputRef = ref;
+
+
+    setRefForDefaultValue = (ref) =>
+        this.defaultValueInputRef = ref;
+
+    setRefForRequiredCheckbox = (ref) =>
+        this.requiredCheckboxRef = ref;
 
     titleChanged(event) {
         this.setState({
@@ -95,9 +108,11 @@ class FieldBuilder extends React.Component {
                     <h5 className="card-header bg-info text-white">Field Builder</h5>
                     <div className="card-body">
                         <LabelField
-                            labelValue={this.state.labelValue}/>
-                        <TypeField/>
-                        <DefaultValueField/>
+                            setRef={this.setRefForLabelInput}/>
+                        <TypeField
+                            setRef={this.setRefForRequiredCheckbox}/>
+                        <DefaultValueField
+                            setRef={this.setRefForDefaultValue}/>
                         <RegionChoicesField
                             titleChanged={this.titleChanged}
                             addToChoices={this.addToChoices}

@@ -1,6 +1,6 @@
 import React from "react"
 
-const TypeField = () =>
+const TypeField = ({setRef}) =>
     <div
         className="row form-group py-2">
         <div
@@ -28,6 +28,7 @@ const TypeField = () =>
                 htmlFor="valueRequiredCheckbox">
 
                 <input
+                    ref={setRef}
                     className="mr-3"
                     type="checkbox"
                     id="valueRequiredCheckbox"/>
