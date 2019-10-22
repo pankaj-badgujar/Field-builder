@@ -7,6 +7,7 @@ import RegionChoicesField from "../components/RegionChoicesField";
 import ChoiceOrderingField from "../components/ChoiceOrderingField";
 import SubmitCancelSection from "../components/SubmitCancelSection";
 import {dummyData} from "../data/dummyData";
+import {dummyData50Choices} from "../data/dummyData50Choices";
 import FormService from "../services/FormService";
 
 class FieldBuilder extends React.Component {
@@ -15,18 +16,14 @@ class FieldBuilder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            choices: dummyData,
-            // choices: dummyData50Choices,
+            // choices: dummyData,
+            choices: dummyData50Choices,
+            newChoice: {title: '', id: -1}
         };
         this.clearFields = this.clearFields.bind(this);
         this.deleteFromChoices = this.deleteFromChoices.bind(this);
         this.addToChoices = this.addToChoices.bind(this);
         this.titleChanged = this.titleChanged.bind(this);
-        this.setRefForDefaultValue = this.setRefForDefaultValue.bind(this);
-        this.setRefForLabelInput = this.setRefForLabelInput.bind(this);
-        this.setRefForRequiredCheckbox = this.setRefForRequiredCheckbox.bind(this);
-        this.setRefForTypeSelect = this.setRefForTypeSelect.bind(this);
-        this.setRefForOrdering = this.setRefForOrdering.bind(this);
 
         this.submitForm = this.submitForm.bind(this);
         this.checkDefaultValueBeforeSubmission =
@@ -69,7 +66,7 @@ class FieldBuilder extends React.Component {
     }
 
     validateChoice(choice) {
-        return !this.isChoiceBlank(choice) && !this.isChoiceDuplicate(choice, true)
+        return !FieldBuilder.isChoiceBlank(choice) && !this.isChoiceDuplicate(choice, true)
             && this.areChoicesLessThanFifty();
     }
 
@@ -160,7 +157,7 @@ class FieldBuilder extends React.Component {
             .then(() =>
                 this.formService.postDataToAPI(this.createJsonOfFormValues())
                     .then(response => console.log(response)))
-            .catch();
+            .catch(()=> null);
     }
 
     render() {
