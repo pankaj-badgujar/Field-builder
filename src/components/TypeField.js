@@ -1,6 +1,6 @@
 import React from "react"
 
-const TypeField = ({setRef}) =>
+const TypeField = ({setRefTypeSelect,setRefCheckbox}) =>
     <div
         className="row form-group py-2">
         <div
@@ -14,6 +14,7 @@ const TypeField = ({setRef}) =>
         <div
             className="col-9 col-md-4">
             <select
+                ref={setRefTypeSelect}
                 id="typeSelect"
                 className="custom-select">
                 <option>Multi-select</option>
@@ -28,7 +29,7 @@ const TypeField = ({setRef}) =>
                 htmlFor="valueRequiredCheckbox">
 
                 <input
-                    ref={setRef}
+                    ref={setRefCheckbox}
                     className="mr-3"
                     type="checkbox"
                     id="valueRequiredCheckbox"/>

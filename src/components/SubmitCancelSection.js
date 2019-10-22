@@ -1,11 +1,12 @@
 import React from "react"
 import "./SubmitCancelSection";
 
-const SubmitCancelSection = ({clearFields}) =>
+const SubmitCancelSection = ({clearFields, submitForm}) =>
     <div className="row form-group">
         <div className="col-3"></div>
         <div className="col-9">
             <button
+                onClick={() => submitForm()}
                 className="btn btn-success mr-md-3 mr-1">
                 Save changes
             </button>

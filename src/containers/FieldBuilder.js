@@ -7,7 +7,7 @@ import RegionChoicesField from "../components/RegionChoicesField";
 import ChoiceOrderingField from "../components/ChoiceOrderingField";
 import SubmitCancelSection from "../components/SubmitCancelSection";
 import {dummyData} from "../data/dummyData";
-
+import FormService from "../services/FormService";
 
 class FieldBuilder extends React.Component {
 
@@ -22,9 +22,16 @@ class FieldBuilder extends React.Component {
         this.deleteFromChoices = this.deleteFromChoices.bind(this);
         this.addToChoices = this.addToChoices.bind(this);
         this.titleChanged = this.titleChanged.bind(this);
-
         this.setRefForDefaultValue = this.setRefForDefaultValue.bind(this);
         this.setRefForLabelInput = this.setRefForLabelInput.bind(this);
+        this.setRefForRequiredCheckbox = this.setRefForRequiredCheckbox.bind(this);
+        this.setRefForTypeSelect = this.setRefForTypeSelect.bind(this);
+        this.setRefForOrdering = this.setRefForOrdering.bind(this);
+
+        this.submitForm = this.submitForm.bind(this);
+
+        this.formService = FormService.getInstance();
+
     }
 
     componentDidMount() {
@@ -42,12 +49,17 @@ class FieldBuilder extends React.Component {
     setRefForLabelInput = (ref) =>
         this.labelInputRef = ref;
 
-
     setRefForDefaultValue = (ref) =>
         this.defaultValueInputRef = ref;
 
     setRefForRequiredCheckbox = (ref) =>
         this.requiredCheckboxRef = ref;
+
+    setRefForTypeSelect = (ref) =>
+        this.typeSelectRef = ref;
+
+    setRefForOrdering = (ref) =>
+        this.orderingRef = ref;
 
     titleChanged(event) {
         this.setState({
@@ -101,16 +113,39 @@ class FieldBuilder extends React.Component {
             choices: this.state.choices.filter(choice => choice.id !== id)
         });
 
+    createJsonOfValues() {
+        console.log("createJson");
+        return {
+            label: this.labelInputRef.value,
+            type: this.typeSelectRef.value,
+            typeSelectValueRequired: this.requiredCheckboxRef.checked,
+            defaultValue: this.defaultValueInputRef.value,
+            choices: this.state.choices,
+            order: this.orderingRef.value
+        }
+
+    }
+
+    submitForm() {
+        console.log("submit");
+        let json = this.createJsonOfValues();
+        console.log(json);
+        this.formService.postDataToAPI(json)
+            .then(res => console.log(res));
+    }
+
     render() {
         return (
             <div className="container mt-4">
                 <div className="card">
                     <h5 className="card-header bg-info text-white">Field Builder</h5>
                     <div className="card-body">
+
                         <LabelField
                             setRef={this.setRefForLabelInput}/>
                         <TypeField
-                            setRef={this.setRefForRequiredCheckbox}/>
+                            setRefTypeSelect={this.setRefForTypeSelect}
+                            setRefCheckbox={this.setRefForRequiredCheckbox}/>
                         <DefaultValueField
                             setRef={this.setRefForDefaultValue}/>
                         <RegionChoicesField
@@ -119,9 +154,12 @@ class FieldBuilder extends React.Component {
                             choices={this.state.choices}
                             deleteFromChoices={this.deleteFromChoices}
                         />
-                        <ChoiceOrderingField/>
+                        <ChoiceOrderingField
+                            setRef={this.setRefForOrdering}/>
                         <SubmitCancelSection
+                            submitForm={this.submitForm}
                             clearFields={this.clearFields}/>
+
                     </div>
                 </div>
                 <br/><br/>
