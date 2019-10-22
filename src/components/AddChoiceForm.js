@@ -1,6 +1,6 @@
 import React from "react"
 
-const AddChoiceForm = ({titleChanged,addChoice}) =>
+const AddChoiceForm = ({titleChanged,addChoice,newChoice}) =>
 
         <div className="row">
             <div className="col-md-8 col-12">
@@ -12,7 +12,7 @@ const AddChoiceForm = ({titleChanged,addChoice}) =>
             </div>
             <div className="col-md-4 col-12 pt-1">
                 <button
-                    onClick={() => addChoice()}
+                    onClick={() => addChoice(newChoice)}
                     className="btn btn-info btn-sm btn-block">
                     Add new choice
                 </button>

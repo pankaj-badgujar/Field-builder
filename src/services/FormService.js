@@ -18,7 +18,10 @@ class FormService{
                 'content-type':'application/json'
             }
 
-        }).then(response => response.json());
+        }).then(response => {
+            console.log(fieldJSON);
+            return response.json()
+        });
 
 }
 
