@@ -1,6 +1,6 @@
 import React from "react"
 
-const DefaultValueField = ({setRef}) =>
+const DefaultValueField = ({setRef,defValueInputChanged}) =>
     <div
         className="row form-group py-2">
         <div
@@ -15,6 +15,7 @@ const DefaultValueField = ({setRef}) =>
             className="col-9">
             <input
                 ref={setRef}
+                onChange={defValueInputChanged}
                 type="text"
                 className="form-control"
                 id="defaultValueInput"

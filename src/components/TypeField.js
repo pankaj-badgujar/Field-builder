@@ -1,6 +1,6 @@
 import React from "react"
 
-const TypeField = ({setRefTypeSelect,setRefCheckbox}) =>
+const TypeField = ({setRefTypeSelect,setRefCheckbox,selectChanged}) =>
     <div
         className="row form-group py-2">
         <div
@@ -14,6 +14,7 @@ const TypeField = ({setRefTypeSelect,setRefCheckbox}) =>
         <div
             className="col-9 col-md-4">
             <select
+                onChange={selectChanged}
                 ref={setRefTypeSelect}
                 id="typeSelect"
                 className="custom-select">

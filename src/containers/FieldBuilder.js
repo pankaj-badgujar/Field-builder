@@ -15,7 +15,7 @@ class FieldBuilder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            choices: dummyData,
+            choices: JSON.parse(localStorage.getItem('choices')) || dummyData,
             // choices: dummyData50Choices,
             newChoice: {title: '', id: -1}
         };
@@ -23,23 +23,51 @@ class FieldBuilder extends React.Component {
         this.deleteFromChoices = this.deleteFromChoices.bind(this);
         this.addToChoices = this.addToChoices.bind(this);
         this.titleChanged = this.titleChanged.bind(this);
+        this.labelInputChanged = this.labelInputChanged.bind(this);
+
         this.submitForm = this.submitForm.bind(this);
         this.checkFormValuesBeforeSubmission =
             this.checkFormValuesBeforeSubmission.bind(this);
         this.formService = FormService.getInstance();
     }
 
+
     componentDidMount() {
+        this.setInitialValueForFieldsIfPresent();
         this.setState({
             nextId: this.state.choices.length + 1
-        })
+        });
     }
+
+    setInitialValueForFieldsIfPresent() {
+        this.labelInputRef.value = localStorage.getItem('labelInputValue');
+        this.defaultValueInputRef.value = localStorage.getItem('defaultValueInput');
+
+        let preselectedType = localStorage.getItem('typeSelectValue');
+        if (preselectedType !== null) {
+            this.typeSelectRef.value = preselectedType;
+        }
+    }
+
 
     clearFields() {
         this.labelInputRef.value = "";
         this.defaultValueInputRef.value = "";
         this.requiredCheckboxRef.checked = false;
     }
+
+    labelInputChanged(event) {
+        localStorage.setItem('labelInputValue', event.target.value)
+    }
+
+    defaultValueInputChanged(event) {
+        localStorage.setItem('defaultValueInput', event.target.value);
+    }
+
+    selectTypeChanged(event) {
+        localStorage.setItem('typeSelectValue', event.target.value);
+    }
+
 
     setRefForLabelInput = (ref) =>
         this.labelInputRef = ref;
@@ -62,6 +90,7 @@ class FieldBuilder extends React.Component {
         });
     }
 
+
     validateChoice(choice) {
         return !this.isChoiceBlank(choice)
             && this.isChoiceLengthLessThanFortyChars(choice)
@@ -70,7 +99,7 @@ class FieldBuilder extends React.Component {
     }
 
     isChoiceLengthLessThanFortyChars(choice) {
-        if(choice.title.length > 40){
+        if (choice.title.length > 40) {
             alert("choice cannot be more than 40 characters");
             return false;
         }
@@ -108,8 +137,12 @@ class FieldBuilder extends React.Component {
 
     addToChoices(choice) {
         if (this.validateChoice(choice)) {
+            let newChoiceList = [choice, ...this.state.choices];
+            localStorage.setItem('choices',
+                JSON.stringify(newChoiceList));
+
             this.setState({
-                choices: [choice, ...this.state.choices],
+                choices: newChoiceList,
                 nextId: this.state.nextId + 1
             });
             return true;
@@ -117,10 +150,14 @@ class FieldBuilder extends React.Component {
         return false;
     }
 
-    deleteFromChoices = (id) =>
+    deleteFromChoices = (id) => {
+        let newChoiceList = this.state.choices.filter(choice => choice.id !== id);
+        localStorage.setItem('choices', JSON.stringify(newChoiceList));
         this.setState({
-            choices: this.state.choices.filter(choice => choice.id !== id)
+            choices: newChoiceList
         });
+    };
+
 
     createJsonOfFormValues() {
         return {
@@ -178,11 +215,15 @@ class FieldBuilder extends React.Component {
                     <div className="card-body">
 
                         <LabelField
+                            inputChanged={this.labelInputChanged}
                             setRef={this.setRefForLabelInput}/>
                         <TypeField
+                            valueRequiredChanged={this.valueRequiredChanged}
+                            selectChanged={this.selectTypeChanged}
                             setRefTypeSelect={this.setRefForTypeSelect}
                             setRefCheckbox={this.setRefForRequiredCheckbox}/>
                         <DefaultValueField
+                            defValueInputChanged={this.defaultValueInputChanged}
                             setRef={this.setRefForDefaultValue}/>
                         <RegionChoicesField
                             titleChanged={this.titleChanged}
