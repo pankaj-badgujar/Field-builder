@@ -7,7 +7,6 @@ import RegionChoicesField from "../components/RegionChoicesField";
 import ChoiceOrderingField from "../components/ChoiceOrderingField";
 import SubmitCancelSection from "../components/SubmitCancelSection";
 import {dummyData} from "../data/dummyData";
-import {dummyData50Choices} from "../data/dummyData50Choices";
 import FormService from "../services/FormService";
 
 class FieldBuilder extends React.Component {
@@ -16,20 +15,18 @@ class FieldBuilder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // choices: dummyData,
-            choices: dummyData50Choices,
+            choices: dummyData,
+            // choices: dummyData50Choices,
             newChoice: {title: '', id: -1}
         };
         this.clearFields = this.clearFields.bind(this);
         this.deleteFromChoices = this.deleteFromChoices.bind(this);
         this.addToChoices = this.addToChoices.bind(this);
         this.titleChanged = this.titleChanged.bind(this);
-
         this.submitForm = this.submitForm.bind(this);
-        this.checkDefaultValueBeforeSubmission =
-            this.checkDefaultValueBeforeSubmission.bind(this);
+        this.checkFormValuesBeforeSubmission =
+            this.checkFormValuesBeforeSubmission.bind(this);
         this.formService = FormService.getInstance();
-
     }
 
     componentDidMount() {
@@ -66,7 +63,7 @@ class FieldBuilder extends React.Component {
     }
 
     validateChoice(choice) {
-        return !FieldBuilder.isChoiceBlank(choice) && !this.isChoiceDuplicate(choice, true)
+        return !this.isChoiceBlank(choice) && !this.isChoiceDuplicate(choice, true)
             && this.areChoicesLessThanFifty();
     }
 
@@ -85,20 +82,19 @@ class FieldBuilder extends React.Component {
             if (showAlert) {
                 alert("Choice already present in the choice list");
             }
-
             return true;
         }
         return false;
     }
 
-    isChoiceBlank(choice) {
+    isChoiceBlank = choice => {
         if (choice === undefined ||
             choice.title.trim().length < 1) {
             alert("Choice cannot be blank");
             return true;
         }
         return false;
-    }
+    };
 
     addToChoices(choice) {
         if (this.validateChoice(choice)) {
@@ -136,28 +132,32 @@ class FieldBuilder extends React.Component {
     }
 
 
-    checkDefaultValueBeforeSubmission = () =>
+    checkFormValuesBeforeSubmission = () =>
         new Promise((resolve, reject) => {
             let defaultChoiceEntered = {
                 title: this.defaultValueInputRef.value,
                 id: this.state.nextId
             };
-            if (!this.isLabelFieldEmpty()
-                && !this.isChoiceDuplicate(defaultChoiceEntered, false)
-                && this.addToChoices(defaultChoiceEntered)) {
-                resolve();
+
+            if (this.isLabelFieldEmpty()) {
+                reject("label field was empty");
             } else {
-                reject();
+                if (this.isChoiceDuplicate(defaultChoiceEntered, false)
+                    || this.addToChoices(defaultChoiceEntered)) {
+                    resolve("form value check successful");
+                } else {
+                    reject("default value could not be added to choice list");
+                }
             }
         });
 
 
     submitForm() {
-        this.checkDefaultValueBeforeSubmission()
+        this.checkFormValuesBeforeSubmission()
             .then(() =>
                 this.formService.postDataToAPI(this.createJsonOfFormValues())
                     .then(response => console.log(response)))
-            .catch(()=> null);
+            .catch(() => console.log("post request not made due to invalid form values"));
     }
 
     render() {
