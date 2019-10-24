@@ -1,30 +1,32 @@
 import React from "react"
 import "./SubmitCancelSection";
+import ButtonComponent from "./ButtonComponent";
 
 const SubmitCancelSection = ({clearFields, submitForm}) =>
     <div className="row form-group">
-        <div className="col-3"></div>
-        <div className="col-9">
-            <button
-                onClick={() => submitForm()}
-                className="btn btn-success mr-md-3 mr-1">
-                Save changes
-            </button>
-            <button
-                className="btn btn-danger mx-md-3 ml-1">Cancel
-            </button>
-            <button
-                onClick={clearFields}
-                className="btn btn-warning ml-md-3 mt-1 d-none d-sm-inline">
-                Clear Form
-            </button>
-            <button
-                onClick={clearFields}
-                className="btn btn-warning ml-md-3 mt-1 btn-block d-block d-sm-none">
-                Clear Form
-            </button>
+        <div className="col-3 "></div>
 
-        </div>
+        <span className="col-9">
+            <ButtonComponent
+
+                buttonContent={"Save changes"}
+                onClickEventHandler={() => submitForm()}
+                classes={"btn btn-success my-2 mr-2"}
+                displayStyle={"inline-block"}/>
+            <ButtonComponent
+
+                classes={"btn btn-danger my-2 mr-2"}
+                buttonContent={"Cancel"}
+                displayStyle={"inline-block"}/>
+
+            <ButtonComponent
+
+                onClickEventHandler={clearFields}
+                classes={"btn btn-warning my-2"}
+                buttonContent={"Clear Form"}
+                displayStyle={"inline-block"}/>
+        </span>
+
     </div>;
 
 export default SubmitCancelSection;

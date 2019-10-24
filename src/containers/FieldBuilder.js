@@ -63,8 +63,18 @@ class FieldBuilder extends React.Component {
     }
 
     validateChoice(choice) {
-        return !this.isChoiceBlank(choice) && !this.isChoiceDuplicate(choice, true)
+        return !this.isChoiceBlank(choice)
+            && this.isChoiceLengthLessThanFortyChars(choice)
+            && !this.isChoiceDuplicate(choice, true)
             && this.areChoicesLessThanFifty();
+    }
+
+    isChoiceLengthLessThanFortyChars(choice) {
+        if(choice.title.length > 40){
+            alert("choice cannot be more than 40 characters");
+            return false;
+        }
+        return true;
     }
 
     areChoicesLessThanFifty() {
