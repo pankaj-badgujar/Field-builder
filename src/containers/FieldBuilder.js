@@ -19,15 +19,18 @@ class FieldBuilder extends React.Component {
             // choices: dummyData50Choices,
             newChoice: {title: '', id: -1}
         };
+
+        //binding methods
         this.clearFields = this.clearFields.bind(this);
         this.deleteFromChoices = this.deleteFromChoices.bind(this);
         this.addToChoices = this.addToChoices.bind(this);
         this.titleChanged = this.titleChanged.bind(this);
         this.labelInputChanged = this.labelInputChanged.bind(this);
-
         this.submitForm = this.submitForm.bind(this);
         this.checkFormValuesBeforeSubmission =
             this.checkFormValuesBeforeSubmission.bind(this);
+
+        //getting instance from singleton service
         this.formService = FormService.getInstance();
     }
 
@@ -39,6 +42,7 @@ class FieldBuilder extends React.Component {
         });
     }
 
+    //getting initial values from local storage if present
     setInitialValueForFieldsIfPresent() {
         this.labelInputRef.value = localStorage.getItem('labelInputValue');
         this.defaultValueInputRef.value = localStorage.getItem('defaultValueInput');
@@ -49,13 +53,7 @@ class FieldBuilder extends React.Component {
         }
     }
 
-
-    clearFields() {
-        this.labelInputRef.value = "";
-        this.defaultValueInputRef.value = "";
-        this.requiredCheckboxRef.checked = false;
-    }
-
+    //setting initial values in local storage.
     labelInputChanged(event) {
         localStorage.setItem('labelInputValue', event.target.value)
     }
@@ -68,7 +66,14 @@ class FieldBuilder extends React.Component {
         localStorage.setItem('typeSelectValue', event.target.value);
     }
 
+    //method to clear all form fields
+    clearFields() {
+        this.labelInputRef.value = "";
+        this.defaultValueInputRef.value = "";
+        this.requiredCheckboxRef.checked = false;
+    }
 
+    //setting up references for components.
     setRefForLabelInput = (ref) =>
         this.labelInputRef = ref;
 
@@ -84,13 +89,15 @@ class FieldBuilder extends React.Component {
     setRefForOrdering = (ref) =>
         this.orderingRef = ref;
 
+
+    //method to capture the title of new choice that is to be added.
     titleChanged(event) {
         this.setState({
             newChoice: {title: event.target.value, id: this.state.nextId}
         });
     }
 
-
+    //validations for new choice before adding to choice list.
     validateChoice(choice) {
         return !this.isChoiceBlank(choice)
             && this.isChoiceLengthLessThanFortyChars(choice)
@@ -135,6 +142,7 @@ class FieldBuilder extends React.Component {
         return false;
     };
 
+    //method to add new choice to the list of choices.
     addToChoices(choice) {
         if (this.validateChoice(choice)) {
             let newChoiceList = [choice, ...this.state.choices];
@@ -150,6 +158,7 @@ class FieldBuilder extends React.Component {
         return false;
     }
 
+    //method to delete a choice from the list of choices.
     deleteFromChoices = (id) => {
         let newChoiceList = this.state.choices.filter(choice => choice.id !== id);
         localStorage.setItem('choices', JSON.stringify(newChoiceList));
@@ -158,7 +167,7 @@ class FieldBuilder extends React.Component {
         });
     };
 
-
+    //method to create json object of all form values for posting to api.
     createJsonOfFormValues() {
         return {
             label: this.labelInputRef.value,
@@ -170,15 +179,7 @@ class FieldBuilder extends React.Component {
         }
     }
 
-    isLabelFieldEmpty() {
-        if (this.labelInputRef.value.trim().length < 1) {
-            alert('Label field cannot be blank');
-            return true;
-        }
-        return false;
-    }
-
-
+    //validations on input fields before creating json object.
     checkFormValuesBeforeSubmission = () =>
         new Promise((resolve, reject) => {
             let defaultChoiceEntered = {
@@ -198,7 +199,15 @@ class FieldBuilder extends React.Component {
             }
         });
 
+    isLabelFieldEmpty() {
+        if (this.labelInputRef.value.trim().length < 1) {
+            alert('Label field cannot be blank');
+            return true;
+        }
+        return false;
+    }
 
+    //method to POST the form to the API.
     submitForm() {
         this.checkFormValuesBeforeSubmission()
             .then(() =>
