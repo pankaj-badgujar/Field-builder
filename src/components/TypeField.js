@@ -21,7 +21,7 @@ const TypeField = ({setRefTypeSelect,setRefCheckbox}) =>
                 <option>single-select</option>
             </select>
         </div>
-        <div className="col-3 d-lg-none"></div>
+        <div className="col-3 d-md-none"></div>
 
         <div className="col-9 col-md-5">
             <label
