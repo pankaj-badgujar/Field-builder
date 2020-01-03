@@ -7,6 +7,7 @@ import RegionChoicesField from "../components/RegionChoicesField";
 import ChoiceOrderingField from "../components/ChoiceOrderingField";
 import SubmitCancelSection from "../components/SubmitCancelSection";
 import {dummyData} from "../data/dummyData";
+import {dummyData50Choices} from "../data/dummyData50Choices";
 import FormService from "../services/FormService";
 
 class FieldBuilder extends React.Component {
@@ -160,7 +161,8 @@ class FieldBuilder extends React.Component {
 
     //method to delete a choice from the list of choices.
     deleteFromChoices = (id) => {
-        let newChoiceList = this.state.choices.filter(choice => choice.id !== id);
+        let newChoiceList = this.state.choices.filter(
+            choice => choice.id !== id);
         localStorage.setItem('choices', JSON.stringify(newChoiceList));
         this.setState({
             choices: newChoiceList
@@ -211,7 +213,8 @@ class FieldBuilder extends React.Component {
     submitForm() {
         this.checkFormValuesBeforeSubmission()
             .then(() =>
-                this.formService.postDataToAPI(this.createJsonOfFormValues())
+                this.formService.postDataToAPI(
+                    this.createJsonOfFormValues())
                     .then(response => console.log(response)))
             .catch(() => console.log("post request not made due to invalid form values"));
     }

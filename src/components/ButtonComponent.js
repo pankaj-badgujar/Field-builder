@@ -1,6 +1,7 @@
 import React from "react"
 
-const ButtonComponent = ({buttonContent,onClickEventHandler,classes,displayStyle}) =>
+const ButtonComponent = ({buttonContent,onClickEventHandler,classes,
+                             displayStyle}) =>
     <div
         style = {{display: displayStyle}}>
         <button
